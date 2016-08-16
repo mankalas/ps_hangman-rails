@@ -2,15 +2,15 @@
 
 <p><%= pluralize(@game.lives, 'life') %> remaining</p>
 
-<% if @game.lives <= 0 %> <!-- Bad! Logic in view!!! -->
+<% if @game.lost? %>
     <p> You've lost the game! The secret word was "<%= @game.secret %>".</p>
 <% else %>
     <% @secret_word.each_char do |c| %>
         <%= c %>
     <% end %>
-    <%= form_for :try, url: edit_try_path(@game), method: :get do |f| %>
-        <%= f.text_field :guess %>
-        <%= f.submit "Guess" %>
+    <%= form_tag(new_game_try_path(@game), method: 'get') do  %>
+        <%= text_field_tag :guess %>
+        <%= submit_tag "Guess" %>
     <% end %>
 
     <% if @game.errors.any? %>
@@ -23,6 +23,9 @@
         </div>
     <% end %>
 <% end %>
-<p>
-    You've already tried <%= @game.tries.chars.join(', ')%>.
-</p>
+<% if @game.tries.length > 0 %>
+    <p>
+        You've already tried <%= @game.tries.chars.join(', ')%>.
+    </p>
+<% end %>
+<%= link_to 'Back to games', games_path %>

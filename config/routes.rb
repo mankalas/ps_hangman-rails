@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
-  resources :games
-  resources :tries
+  resources :games do
+    resources :tries
+  end
 
   get 'welcome/index'
 
