@@ -5,3 +5,11 @@
 <% @secret_word.each_char do |c| %>
     <%= c %>
 <% end %>
+
+<%= form_for :try, url: edit_try_path(@game), method: :get do |f| %>
+    <%= f.text_field :guess %>
+    <%= f.submit "Guess" %>
+<% end %>
+<p>
+    You've already tried <%= @game.tries.chars.join(', ')%>.
+</p>
