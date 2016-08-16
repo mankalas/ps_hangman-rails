@@ -5,9 +5,8 @@
 <% if @game.lost? %>
     <p> You've lost the game! The secret word was "<%= @game.secret %>".</p>
 <% else %>
-    <% @secret_word.each_char do |c| %>
-        <%= c %>
-    <% end %>
+    <h2><%= @game.show_secret_word %></h2>
+
     <%= form_tag(new_game_try_path(@game), method: 'get') do  %>
         <%= text_field_tag :guess %>
         <%= submit_tag "Guess" %>
