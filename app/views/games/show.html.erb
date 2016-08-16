@@ -3,7 +3,9 @@
 <p><%= pluralize(@game.lives, 'life') %> remaining</p>
 
 <% if @game.lost? %>
-    <p> You've lost the game! The secret word was "<%= @game.secret %>".</p>
+    <p>You've lost the game! The secret word was "<%= @game.secret %>".</p>
+<% elsif @game.won? %>
+    <p>You've won the game! Congrats!</p>
 <% else %>
     <h2><%= @game.show_secret_word %></h2>
 

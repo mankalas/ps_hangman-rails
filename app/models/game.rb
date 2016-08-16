@@ -3,6 +3,12 @@ class Game < ApplicationRecord
     lives <= 0
   end
 
+  def won?
+    secret.each_char.all? do |char|
+      tries.include?(char)
+    end
+  end
+
   def show_secret_word
     secret.each_char.map do |char|
       tries.include?(char) ? char : '_'
