@@ -1,9 +1,11 @@
 <h1>List of games</h1>
 
+<table>
 <% @games.each do |game| %>
     <tr>
-        <td><%= game.id %></td>
+        <td>Game #<%= game.id %></td>
     </tr>
 <% end %>
+</table>
 
 <%= link_to 'Create a new game', new_game_path %>

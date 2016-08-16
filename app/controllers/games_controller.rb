@@ -6,7 +6,6 @@ class GamesController < ApplicationController
   def new
     @game = Game.new
     @game.save
-    redirect_to @game
+    redirect_to games_path
   end
-
 end
