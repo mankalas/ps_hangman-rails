@@ -2,22 +2,26 @@
 
 <p><%= pluralize(@game.lives, 'life') %> remaining</p>
 
-<% @secret_word.each_char do |c| %>
-    <%= c %>
-<% end %>
+<% if @game.lives <= 0 %> <!-- Bad! Logic in view!!! -->
+    <p> You've lost the game! The secret word was "<%= @game.secret %>".</p>
+<% else %>
+    <% @secret_word.each_char do |c| %>
+        <%= c %>
+    <% end %>
+    <%= form_for :try, url: edit_try_path(@game), method: :get do |f| %>
+        <%= f.text_field :guess %>
+        <%= f.submit "Guess" %>
+    <% end %>
 
-<%= form_for :try, url: edit_try_path(@game), method: :get do |f| %>
-    <%= f.text_field :guess %>
-    <%= f.submit "Guess" %>
-<% end %>
-<% if @game.errors.any? %>
-    <div id="error_explanation">
-        <ul>
-            <% @game.errors.full_messages.each do |msg| %>
-                <li><%= msg %></li>
-            <% end %>
-        </ul>
-    </div>
+    <% if @game.errors.any? %>
+        <div id="error_explanation">
+            <ul>
+                <% @game.errors.full_messages.each do |msg| %>
+                    <li><%= msg %></li>
+                <% end %>
+            </ul>
+        </div>
+    <% end %>
 <% end %>
 <p>
     You've already tried <%= @game.tries.chars.join(', ')%>.

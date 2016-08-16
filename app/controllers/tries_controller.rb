@@ -6,9 +6,8 @@ class TriesController < ApplicationController
       game.tries << try
       game.lives -= 1 unless game.secret.include?(try)
       game.update(game_params)
-    else
-      game.save(game_params)
     end
+    # Nicer way to do it?
     redirect_to game, notice: "Already tried #{try}"
   end
 

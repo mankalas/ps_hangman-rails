@@ -6,7 +6,7 @@ class GamesController < ApplicationController
   def show
     @game = Game.find(params[:id])
     @game.errors.add(:base, flash[:notice]) if flash[:notice]
-    @secret_word = show_secret_word(@game) # instance variable???
+    @secret_word = show_secret_word
   end
 
   def new
@@ -18,9 +18,9 @@ class GamesController < ApplicationController
   private
 
   # Helper method in another file???
-  def show_secret_word(game)
-    game.secret.each_char.map do |char|
-      game.tries.include?(char) ? char : '_'
+  def show_secret_word
+    @game.secret.each_char.map do |char|
+      @game.tries.include?(char) ? char : '_'
     end.join
   end
 end
