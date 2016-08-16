@@ -1,0 +1,9 @@
+<h1>List of games</h1>
+
+<% @games.each do |game| %>
+    <tr>
+        <td><%= game.id %></td>
+    </tr>
+<% end %>
+
+<%= link_to 'Create a new game', new_game_path %>
