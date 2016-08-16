@@ -2,12 +2,14 @@ class TriesController < ApplicationController
   def edit
     try = params[:try][:guess]
     game = Game.find(params[:id])
-    if not games.tries.include?(try)
+    if not game.tries.include?(try)
       game.tries << try
       game.lives -= 1 unless game.secret.include?(try)
       game.update(game_params)
+    else
+      game.save(game_params)
     end
-    redirect_to game
+    redirect_to game, notice: "Already tried #{try}"
   end
 
   private

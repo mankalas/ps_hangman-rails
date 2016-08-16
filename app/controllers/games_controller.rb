@@ -5,6 +5,7 @@ class GamesController < ApplicationController
 
   def show
     @game = Game.find(params[:id])
+    @game.errors.add(:base, flash[:notice]) if flash[:notice]
     @secret_word = show_secret_word(@game) # instance variable???
   end
 

@@ -10,6 +10,15 @@
     <%= f.text_field :guess %>
     <%= f.submit "Guess" %>
 <% end %>
+<% if @game.errors.any? %>
+    <div id="error_explanation">
+        <ul>
+            <% @game.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+            <% end %>
+        </ul>
+    </div>
+<% end %>
 <p>
     You've already tried <%= @game.tries.chars.join(', ')%>.
 </p>
