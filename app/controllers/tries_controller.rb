@@ -1,0 +1,2 @@
+class TriesController < ApplicationController
+end
