@@ -1,0 +1,7 @@
+<h1>Game #<%= @game.id %></h1>
+
+<p><%= pluralize(@game.lives, 'life') %> remaining</p>
+
+<% @secret_word.each_char do |c| %>
+    <%= c %>
+<% end %>

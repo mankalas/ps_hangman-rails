@@ -3,7 +3,8 @@
 <table>
 <% @games.each do |game| %>
     <tr>
-        <td>Game #<%= game.id %></td>
+        <td>Game #<%= game.id %>. <%= pluralize(game.lives, 'life') %> remaining. Secret word is "<%= game.secret %>".</td>
+        <td><%= link_to 'Join', game_path(game) %></td>
     </tr>
 <% end %>
 </table>
