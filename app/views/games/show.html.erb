@@ -1,6 +1,6 @@
 <h1>Game #<%= @game.id %></h1>
 
-<p><%= pluralize(@game.lives, 'life') %> remaining</p>
+<p><%= image_tag "hang#{7 - @game.lives}" %></p>
 
 <% if @game.lost? %>
     <p>You've lost the game! The secret word was "<%= @game.secret %>".</p>
