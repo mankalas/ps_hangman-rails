@@ -15,6 +15,7 @@ class GamesController < ApplicationController
   end
 end
 
+# Here????
 class WordPicker
   UNIX_WORDS_PATH = '/usr/share/dict/words'
   def pick
