@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 20160816034138) do
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
     t.string   "secret"
-    t.integer  "lives",      default: 5
+    t.integer  "lives",      default: 6
     t.string   "tries",      default: ""
   end
 
