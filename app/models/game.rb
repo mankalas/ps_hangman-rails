@@ -4,8 +4,10 @@ class Game < ApplicationRecord
   end
 
   def won?
-    secret.each_char.all? do |char|
-      tries.include?(char)
+    if secret
+      secret.each_char.all? do |char|
+        tries.include?(char)
+      end
     end
   end
 

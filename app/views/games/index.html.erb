@@ -1,12 +1,21 @@
 <h1>List of games</h1>
 
-<table>
-<% @games.each do |game| %>
+<table border="1">
     <tr>
-        <td>Game #<%= game.id %>. <%= pluralize(game.lives, 'life') %> remaining. Secret word is "<%= game.secret %>".</td>
-        <td><%= link_to 'Join', game_path(game) %></td>
+        <th>Game #</th>
+        <th>Status</th>
+        <th>Lives</th>
+        <th>Secret word</th>
     </tr>
-<% end %>
+    <% @games.each do |game| %>
+        <tr>
+            <td><%= game.id %></td>
+            <td><%= game.won? ? 'Won' : (game.lost?) ? 'Lost' : 'In progress' %></td>
+            <td><%= pluralize(game.lives, 'life') %></td>
+            <td><%= game.secret %></td>
+            <td><%= link_to 'Join', game_path(game) %></td>
+        </tr>
+    <% end %>
 </table>
 
 <%= link_to 'Create a new game', new_game_path %>
