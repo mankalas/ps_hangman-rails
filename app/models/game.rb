@@ -1,10 +1,12 @@
 class TryValidator < ActiveModel::Validator
   def validate(record)
     tries = record.tries
-    duplicates = tries.each_char.detect do |char|
-      tries.count(char) > 1
+    if tries != nil
+      duplicates = tries.each_char.detect do |char|
+        tries.count(char) > 1
+      end
+      record.errors[:tries] << "Already tried '#{duplicates}'" if duplicates
     end
-    record.errors[:tries] << "Already tried '#{duplicates}'" if duplicates
   end
 end
 
