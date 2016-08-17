@@ -14,14 +14,10 @@
         <%= submit_tag "Guess" %>
     <% end %>
 
-    <% if @game.errors.any? %>
-        <div id="error_explanation">
-            <ul>
-                <% @game.errors.full_messages.each do |msg| %>
-                    <li><%= msg %></li>
-                <% end %>
-            </ul>
-        </div>
+    <% if flash[:notice] %>
+        <% flash[:notice].each do |notice| %>
+            <%= "#{notice}" %>
+        <% end %>
     <% end %>
 <% end %>
 <% if @game.tries.length > 0 %>
