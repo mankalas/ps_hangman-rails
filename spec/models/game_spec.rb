@@ -4,7 +4,7 @@ RSpec.describe Game, type: :model do
   let(:secret) { 'platypus' }
   let(:game) { Game.new(secret: secret) }
 
-  shared_examples "a words-only field" do
+  shared_examples "a letters-only field" do
     context "rejects" do
       it "numbers" do
         expect{ game.send(field, 1) }.to change{ game.valid? }.from(true).to(false)
@@ -34,7 +34,7 @@ RSpec.describe Game, type: :model do
     describe ".secret" do
       let(:field) { :secret= }
 
-      it_behaves_like "a words-only field"
+      it_behaves_like "a letters-only field"
 
       context "rejects" do
         it "empty word" do
@@ -76,7 +76,7 @@ RSpec.describe Game, type: :model do
     describe ".tries" do
       let(:field) { :tries= }
 
-      it_behaves_like "a words-only field"
+      it_behaves_like "a letters-only field"
 
       context "rejects" do
         it "duplicates" do
@@ -155,7 +155,7 @@ RSpec.describe Game, type: :model do
       end
     end
 
-    context "on already tried letter" do
+    context "duplicated guess" do
       let(:guess) { 'e' }
 
       it "does not decrement lives" do
