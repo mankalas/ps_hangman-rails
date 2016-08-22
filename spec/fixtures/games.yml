@@ -1,0 +1,4 @@
+game:
+  id: 42
+  secret: "elephant"
+  tries: ""

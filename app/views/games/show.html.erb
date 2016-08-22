@@ -1,6 +1,6 @@
 <h1>Game #<%= @game.id %></h1>
 
-<p><%= image_tag "hang#{7 - @game.lives}" %></p>
+<p><%= image_tag "hang#{7 - @game.lives}" %><%= pluralize(@game.lives, "life") %> remaining</p>
 
 <% if @game.lost? %>
     <p>You've lost the game! The secret word was "<%= @game.secret %>".</p>
@@ -12,6 +12,7 @@
     <%= form_tag({:action => 'create', :controller => 'tries',
                  :game_id => @game.id},
                  method: 'post') do  %>
+        <%= label_tag 'Your guess'%>
         <%= text_field_tag :guess %>
         <%= submit_tag "Guess" %>
     <% end %>

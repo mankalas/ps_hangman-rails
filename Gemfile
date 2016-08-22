@@ -36,6 +36,7 @@ group :development, :test do
   # Use RSpec for testing
   gem 'rspec-rails', '~> 3.5'
   gem 'rails-controller-testing'
+  gem 'capybara', '~> 2.4'
 end
 
 group :development do
