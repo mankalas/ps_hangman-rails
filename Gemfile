@@ -35,6 +35,7 @@ group :development, :test do
   gem 'byebug', platform: :mri
   # Use RSpec for testing
   gem 'rspec-rails', '~> 3.5'
+  gem 'rails-controller-testing'
 end
 
 group :development do
