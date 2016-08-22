@@ -1,5 +1,5 @@
 class TriesController < ApplicationController
-  def new
+  def create
     try = params[:guess]
     game = Game.find(params[:game_id])
     game.guess(try)

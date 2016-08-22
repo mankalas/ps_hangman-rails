@@ -1,19 +1,18 @@
 require 'rails_helper'
 
 RSpec.describe TriesController, type: :controller do
-  describe "GET #new" do
+  describe "GET #create" do
     fixtures :games
     let(:game) { games(:game) }
     let(:letter) { 'e' }
-    # TODOL POST
 
     def guess(input)
-      get :new, params: { guess: input, game_id: game.id }
+      post :create, params: { guess: input, game_id: game.id }
     end
 
     describe "interaction with the game" do
       before do
-        expect(Game).to receive(:find).and_return(game)
+        expect(Game).to receive(:find).with(game.id.to_s).and_return(game)
       end
 
       after do

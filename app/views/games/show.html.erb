@@ -9,7 +9,9 @@
 <% else %>
     <h2><%= @game.show_secret_word %></h2>
 
-    <%= form_tag(new_game_try_path(@game), method: 'get') do  %>
+    <%= form_tag({:action => 'create', :controller => 'tries',
+                 :game_id => @game.id},
+                 method: 'post') do  %>
         <%= text_field_tag :guess %>
         <%= submit_tag "Guess" %>
     <% end %>
