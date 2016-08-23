@@ -8,6 +8,7 @@ end
 feature "2. User sees how many letters there are in the word" do
   fixtures :games
   let(:game) { games(:game) }
+
   scenario "They see as many underscores as there are letters in the secret word" do
     visit game_path(game)
     expect(page).to have_content(('_' * game.secret.length).chars.join(' '))

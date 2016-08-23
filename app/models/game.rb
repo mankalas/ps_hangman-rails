@@ -10,7 +10,16 @@ class TryValidator < ActiveModel::Validator
   end
 end
 
+module WordPicker
+  UNIX_WORDS_PATH = '/usr/share/dict/words'
+  def pick_word
+    File.read(UNIX_WORDS_PATH).split.sample
+  end
+end
+
 class Game < ApplicationRecord
+  include WordPicker
+
   validates :secret,
             presence: true,
             format: { with: /\A[a-zA-Z]+\z/ }
@@ -23,20 +32,21 @@ class Game < ApplicationRecord
 
   validates_with TryValidator, fields: [:tries]
 
+  def initialize(arguments={})
+    super
+    self.secret ||= pick_word
+  end
+
   def lost?
     lives <= 0
   end
 
   def won?
-    secret.each_char.all? do |char|
-      tries.include?(char)
-    end
+    secret.each_char.all? { |char| tries.include?(char) }
   end
 
-  def show_secret_word
-    secret.each_char.map do |char|
-      tries.include?(char) ? char : '_'
-    end.join(' ')
+  def secret_word_masked
+    secret.each_char.map { |char| tries.include?(char) ? char : nil }
   end
 
   def guess(try)
@@ -44,5 +54,14 @@ class Game < ApplicationRecord
     if valid?
       self.lives -= 1 unless secret.include?(try)
     end
+  end
+
+  def guess!(try)
+    guess(try)
+    save!
+  end
+
+  def guesses_already_made?
+    tries.length > 0
   end
 end

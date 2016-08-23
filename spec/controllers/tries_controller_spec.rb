@@ -24,7 +24,7 @@ RSpec.describe TriesController, type: :controller do
       end
 
       it "updates the game" do
-        expect(game).to receive(:update).once.with(any_args)
+        expect(game).to receive(:save).once
       end
     end
 

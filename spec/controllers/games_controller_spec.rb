@@ -9,9 +9,13 @@ RSpec.describe GamesController, type: :controller do
   end
 
   describe "GET #new" do
-    it 'redirects to the main page' do
+    it 'creates a new game' do
       expect{ get :new }.to change{ Game.count }.by(1)
-      expect(response).to redirect_to games_path
+    end
+
+    it 'redirects to the game\'s page' do
+      get :new
+      expect(response).to redirect_to Game.last
     end
   end
 
@@ -19,8 +23,7 @@ RSpec.describe GamesController, type: :controller do
     fixtures :games
 
     it 'renders the show template' do
-      game = games(:game)
-      get :show, id: game.id
+      get :show, id: games(:game).id
       expect(response).to render_template(:show)
     end
   end

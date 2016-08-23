@@ -31,7 +31,7 @@ RSpec.describe Game, type: :model do
   end
 
   describe "validation" do
-    describe ".secret" do
+    describe "#secret" do
       let(:field) { :secret= }
 
       it_behaves_like "a letters-only field"
@@ -42,12 +42,12 @@ RSpec.describe Game, type: :model do
         end
 
         it "nil word" do
-          expect{ game.secret = nil}.to change{ game.valid? }.from(true).to(false)
+          expect{ game.secret = nil }.to change{ game.valid? }.from(true).to(false)
         end
       end
     end
 
-    describe ".lives" do
+    describe "#lives" do
       context "rejects" do
         it "integers <0" do
           expect(Game.new(secret: secret, lives: -1)).not_to be_valid
@@ -73,7 +73,7 @@ RSpec.describe Game, type: :model do
       end
     end
 
-    describe ".tries" do
+    describe "#tries" do
       let(:field) { :tries= }
 
       it_behaves_like "a letters-only field"
@@ -121,7 +121,7 @@ RSpec.describe Game, type: :model do
   describe "#won?" do
     context "all secret's letters have been guessed" do
       before do
-        expect(game).to receive(:tries).at_least(:once).and_return(secret)
+        expect(game).to receive(:tries).exactly(secret.length).times.and_return(secret)
       end
 
       it "is truthy" do
@@ -136,14 +136,14 @@ RSpec.describe Game, type: :model do
     end
   end
 
-  describe "#show_secret_word" do
+  describe "#secret_word_masked" do
     context "one letter has been rightly guessed" do
       before do
-        expect(game).to receive(:tries).at_least(:once).and_return('p')
+        expect(game).to receive(:tries).exactly(secret.length).times.and_return('p')
       end
 
       it "obfuscates the word" do
-        expect(game.show_secret_word).to eq 'p____p__'.chars.join(' ')
+        expect(game.secret_word_masked).to eq ["p", nil, nil, nil, nil, "p", nil, nil]
       end
     end
   end

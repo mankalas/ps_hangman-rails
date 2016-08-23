@@ -5,20 +5,14 @@ class GamesController < ApplicationController
 
   def show
     @game = Game.find(params[:id])
-    @game.errors.add(:base, flash[:notice]) if flash[:notice]
   end
 
   def new
-    @game = Game.new(secret: WordPicker.new.pick)
-    @game.save
-    redirect_to games_path
-  end
-end
-
-# Here????
-class WordPicker
-  UNIX_WORDS_PATH = '/usr/share/dict/words'
-  def pick
-    File.read(UNIX_WORDS_PATH).split.sample
+    @game = Game.new
+    if @game.save
+      redirect_to @game
+    else
+      redirect_to games_path, notice: @game.errors
+    end
   end
 end
