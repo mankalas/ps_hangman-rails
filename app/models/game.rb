@@ -29,8 +29,10 @@ class Game < ApplicationRecord
                             greater_than_or_equal_to: 0 }
   validates :tries,
             format: { with: /\A[a-zA-Z]*\z/, message: "input must be a letter" }
-
   validates_with TryValidator, fields: [:tries]
+
+  has_many :plays
+  has_many :players, through: :plays
 
   def initialize(arguments={})
     super
