@@ -17,6 +17,7 @@ class GamesController < ApplicationController
       @game.add_player(player_id)
     end
     if @game.save
+      @game.set_first_player
       redirect_to @game
     else
       redirect_to games_path, notice: @game.errors

@@ -31,7 +31,8 @@ class Game < ApplicationRecord
             format: { with: /\A[a-zA-Z]*\z/, message: "input must be a letter" }
   validates_with TryValidator, fields: [:tries]
 
-  has_and_belongs_to_many :players
+  has_many :plays
+  has_many :players, through: :plays
 
   def initialize(arguments={})
     super
@@ -53,9 +54,24 @@ class Game < ApplicationRecord
   def guess(try)
     self.tries << try
     if failed_try?(try)
-      self.lives -= 1
-      self.current_player_index = (current_player_index + 1) % players.length
+      play = current_play
+      play.lives -= 1
+      play.save!
+      set_next_turn
     end
+  end
+
+  def set_next_turn
+    cur_play = current_play
+    cur_play.active = false
+    cur_play.save!
+
+    plays_ordered_by_id = plays.order(:id)
+    next_play = plays_ordered_by_id.find { |play| play.id > cur_play.id && play.lives > 0 }
+    next_play ||= plays_ordered_by_id.first
+
+    next_play.active = true
+    next_play.save!
   end
 
   def failed_try?(try)
@@ -72,12 +88,17 @@ class Game < ApplicationRecord
   end
 
   def add_player(player_id)
-    player = Player.find(player_id)
-    self.players << player
+    self.players << Player.find(player_id)
+  end
+
+  def set_first_player
+    play = plays.take
+    play.active = true
+    play.save!
   end
 
   def current_player
-    players.all[current_player_index]
+    Player.find(current_play.player_id)
   end
 
   def current_player_name
@@ -86,5 +107,13 @@ class Game < ApplicationRecord
 
   def current_player_color
     current_player.color
+  end
+
+  def current_play
+    plays.find_by(active: true)
+  end
+
+  def current_player_lives
+    current_play.lives
   end
 end

@@ -10,15 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160824031534) do
+ActiveRecord::Schema.define(version: 20160824035658) do
 
   create_table "games", force: :cascade do |t|
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
     t.string   "secret"
-    t.integer  "lives",                default: 6
-    t.string   "tries",                default: ""
-    t.integer  "current_player_index", default: 0
+    t.integer  "lives",      default: 6
+    t.string   "tries",      default: ""
   end
 
   create_table "games_players", id: false, force: :cascade do |t|
@@ -33,6 +32,17 @@ ActiveRecord::Schema.define(version: 20160824031534) do
     t.string   "color"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "plays", force: :cascade do |t|
+    t.integer  "game_id"
+    t.integer  "player_id"
+    t.integer  "lives",      default: 6
+    t.boolean  "active",     default: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.index ["game_id"], name: "index_plays_on_game_id"
+    t.index ["player_id"], name: "index_plays_on_player_id"
   end
 
 end
