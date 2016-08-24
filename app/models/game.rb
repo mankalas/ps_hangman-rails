@@ -52,9 +52,14 @@ class Game < ApplicationRecord
 
   def guess(try)
     self.tries << try
-    if valid?
-      self.lives -= 1 unless secret.include?(try)
+    if failed_try?(try)
+      self.lives -= 1
+      self.current_player_index = (current_player_index + 1) % players.length
     end
+  end
+
+  def failed_try?(try)
+    valid? and not secret.include?(try)
   end
 
   def guess!(try)
@@ -64,5 +69,22 @@ class Game < ApplicationRecord
 
   def guesses_already_made?
     tries.length > 0
+  end
+
+  def add_player(player_id)
+    player = Player.find(player_id)
+    self.players << player
+  end
+
+  def current_player
+    players.all[current_player_index]
+  end
+
+  def current_player_name
+    current_player.name
+  end
+
+  def current_player_color
+    current_player.color
   end
 end

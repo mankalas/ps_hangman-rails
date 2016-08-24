@@ -9,11 +9,13 @@
 <% else %>
     <h2><%= format_masked_word(@game.secret_word_masked) %></h2>
 
+    <div style="background-color:<%= @game.current_player_color %>">
     <%= form_tag(game_tries_path(@game), :method => 'post') do  %>
-        <%= label_tag 'Your guess'%>
+        <%= label_tag "Your guess dear #{@game.current_player_name}:"%>
         <%= text_field_tag :guess %>
         <%= submit_tag "Guess" %>
     <% end %>
+    </div>
 
     <% if flash[:notice] %>
         <% flash[:notice].each do |notice| %>
