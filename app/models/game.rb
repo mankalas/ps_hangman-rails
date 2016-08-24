@@ -31,8 +31,7 @@ class Game < ApplicationRecord
             format: { with: /\A[a-zA-Z]*\z/, message: "input must be a letter" }
   validates_with TryValidator, fields: [:tries]
 
-  has_many :plays
-  has_many :players, through: :plays
+  has_and_belongs_to_many :players
 
   def initialize(arguments={})
     super

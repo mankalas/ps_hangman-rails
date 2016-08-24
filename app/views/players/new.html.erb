@@ -1,0 +1,16 @@
+<h1>Here comes a new challenger</h1>
+
+<%= form_for :player, url: players_path do |f| %>
+    <p>
+        <%= f.label :name %>
+        <%= f.text_field :name %>
+    </p>
+    <p>
+        <%= f.label :color %>
+        <%= f.color_field :color %>
+    </p>
+    <p>
+        <%= f.submit %>
+    </p>
+<% end %>
+<%= link_to "Back to index", players_path %>

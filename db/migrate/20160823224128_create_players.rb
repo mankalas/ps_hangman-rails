@@ -6,5 +6,10 @@ class CreatePlayers < ActiveRecord::Migration[5.0]
 
       t.timestamps
     end
+
+    create_table :games_players, id: false do |t|
+      t.belongs_to :player, index: true
+      t.belongs_to :game, index: true
+    end
   end
 end

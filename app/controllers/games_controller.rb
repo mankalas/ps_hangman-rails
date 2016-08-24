@@ -9,6 +9,13 @@ class GamesController < ApplicationController
 
   def new
     @game = Game.new
+  end
+
+  def create
+    @game = Game.new
+    params[:game][:player_ids].each do |player_id|
+      @game.players << Player.find(player_id)
+    end
     if @game.save
       redirect_to @game
     else

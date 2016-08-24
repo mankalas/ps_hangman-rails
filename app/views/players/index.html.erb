@@ -1,0 +1,19 @@
+<h1>Players</h1>
+
+<table border="1">
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Color</th>
+    </tr>
+    <% @players.each do |player| %>
+        <tr>
+            <td><%= player.id %></td>
+            <td><%= player.name %></td>
+            <td><%= player.color %></td>
+        </tr>
+    <% end %>
+</table>
+
+<%= link_to 'Create a new player', new_player_path %><br>
+<%= link_to 'Back to Welcome page', welcome_index_path %>

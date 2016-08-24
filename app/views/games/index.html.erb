@@ -6,6 +6,7 @@
         <th>Status</th>
         <th>Lives</th>
         <th>Secret word</th>
+        <th>Players</th>
     </tr>
     <% @games.each do |game| %>
         <tr>
@@ -13,9 +14,11 @@
             <td><%= game.won? ? 'Won' : (game.lost?) ? 'Lost' : 'In progress' %></td>
             <td><%= pluralize(game.lives, 'life') %></td>
             <td><%= game.secret %></td>
+            <td><%= game.players.map{|p| p.name } %>
             <td><%= link_to 'Join', game_path(game) %></td>
         </tr>
     <% end %>
 </table>
 
-<%= link_to 'Create a new game', new_game_path %>
+<%= link_to 'Create a new game', new_game_path %><br>
+<%= link_to 'Back to Welcome', welcome_index_path %>
