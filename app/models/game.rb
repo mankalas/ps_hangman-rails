@@ -1,12 +1,8 @@
 class TryValidator < ActiveModel::Validator
   def validate(record)
-    tries = record.tries
-    if tries != nil
-      duplicates = tries.each_char.detect do |char|
-        tries.count(char) > 1
-      end
-      record.errors[:tries] << "Already tried '#{duplicates}'" if duplicates
-    end
+    tries = record.tries ? record.tries : ""
+    duplicates = tries.each_char.detect { |char| tries.count(char) > 1 }
+    record.errors[:tries] << "Already tried '#{duplicates}'" if duplicates
   end
 end
 
@@ -20,6 +16,9 @@ end
 class Game < ApplicationRecord
   include WordPicker
 
+  has_many :plays
+  has_many :players, through: :plays
+
   validates :secret,
             presence: true,
             format: { with: /\A[a-zA-Z]+\z/ }
@@ -30,9 +29,6 @@ class Game < ApplicationRecord
   validates :tries,
             format: { with: /\A[a-zA-Z]*\z/, message: "input must be a letter" }
   validates_with TryValidator, fields: [:tries]
-
-  has_many :plays
-  has_many :players, through: :plays
 
   def initialize(arguments={})
     super
@@ -51,31 +47,28 @@ class Game < ApplicationRecord
     secret.each_char.map { |char| tries.include?(char) ? char : nil }
   end
 
-  def guess(try)
-    self.tries << try
-    if failed_try?(try)
-      play = current_play
-      play.lives -= 1
-      play.save!
-      set_next_turn
-    end
+  def failed_try?(try)
+    # Bad input is not a fail try, it's a invalid try.
+    valid? and not secret.include?(try)
   end
 
   def set_next_turn
-    cur_play = current_play
-    cur_play.active = false
-    cur_play.save!
+    current_play.set_active!(false)
 
     plays_ordered_by_id = plays.order(:id)
-    next_play = plays_ordered_by_id.find { |play| play.id > cur_play.id && play.lives > 0 }
-    next_play ||= plays_ordered_by_id.first
+    first_play = plays_ordered_by_id.first
+    next_play = plays_ordered_by_id.find(&method(:next_valid?)) || first_play
 
-    next_play.active = true
-    next_play.save!
+    next_play.set_active!(true)
   end
 
-  def failed_try?(try)
-    valid? and not secret.include?(try)
+  def guess(try)
+    self.tries << try
+
+    if failed_try?(try)
+      current_play.lose_a_life!
+      set_next_turn
+    end
   end
 
   def guess!(try)
@@ -91,29 +84,15 @@ class Game < ApplicationRecord
     self.players << Player.find(player_id)
   end
 
-  def set_first_player
-    play = plays.take
-    play.active = true
-    play.save!
+  def set_first_player!
+    plays.take.set_active!(true)
   end
 
   def current_player
     Player.find(current_play.player_id)
   end
 
-  def current_player_name
-    current_player.name
-  end
-
-  def current_player_color
-    current_player.color
-  end
-
   def current_play
     plays.find_by(active: true)
-  end
-
-  def current_player_lives
-    current_play.lives
   end
 end

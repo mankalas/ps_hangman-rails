@@ -1,7 +1,8 @@
-feature "1. User creates a game" do
+feature "User creates a game" do
   scenario 'They see and click the new game link' do
     visit games_path
-    expect{ click_link 'Create a new game' }.to change{ Game.count }.by(1)
+    click_link 'Setup a new game'
+    expect{ click_button 'Create game' }.to change{ Game.count }.by(1)
   end
 end
 

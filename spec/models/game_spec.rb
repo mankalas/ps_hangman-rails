@@ -97,39 +97,30 @@ RSpec.describe Game, type: :model do
   end
 
   describe "#lost?" do
-    context "no lives left" do
-      before do
-        expect(game).to receive(:lives).and_return(0)
-      end
-
+    context "when no lives left" do
       it "is truthy" do
+        expect(game).to receive(:lives).and_return(0)
         expect(game).to be_lost
       end
     end
 
-    context "some lives left" do
-      before do
-        expect(game).to receive(:lives).and_return(5)
-      end
-
+    context "when some lives left" do
       it "is falsey" do
+        expect(game).to receive(:lives).and_return(5)
         expect(game).not_to be_lost
       end
     end
   end
 
   describe "#won?" do
-    context "all secret's letters have been guessed" do
-      before do
-        expect(game).to receive(:tries).exactly(secret.length).times.and_return(secret)
-      end
-
+    context "when all secret's letters have been guessed" do
       it "is truthy" do
+        expect(game).to receive(:tries).exactly(secret.length).times.and_return(secret)
         expect(game).to be_won
       end
     end
 
-    context "not all secret letters have been guessed" do
+    context "when not all secret letters have been guessed" do
       it "is falsey" do
         expect(game).not_to be_won
       end
@@ -137,37 +128,98 @@ RSpec.describe Game, type: :model do
   end
 
   describe "#secret_word_masked" do
-    context "one letter has been rightly guessed" do
-      before do
-        expect(game).to receive(:tries).exactly(secret.length).times.and_return('p')
+    context "when no letter has been guessed" do
+      it "returns a array of nils" do
+        expect(game).to receive(:tries).exactly(secret.length).times.and_return("")
+        expect(game.secret_word_masked).to eq [nil] * secret.length
       end
+    end
 
-      it "obfuscates the word" do
+    context "when one letter has been guessed" do
+      it "returns an array of nils, except for the guessed letter" do
+        expect(game).to receive(:tries).exactly(secret.length).times.and_return('p')
         expect(game.secret_word_masked).to eq ["p", nil, nil, nil, nil, "p", nil, nil]
+      end
+    end
+
+    context "when all letters have been guessed" do
+      it "returns an array with the letters, without any nil" do
+        expect(game).to receive(:tries).exactly(secret.length).times.and_return('platyus')
+        expect(game.secret_word_masked).to eq 'platypus'.chars
+      end
+    end
+  end
+
+  describe "#failed_try?" do
+    context "when submitting bad input" do
+      it "is falsey" do
+        expect(game).to receive(:valid?).and_return(false)
+        expect(game.failed_try?('1')).to be_falsey
+      end
+    end
+
+    context "when submitting a bad letter" do
+      it "is truthy" do
+        expect(game.failed_try?('x')).to be_truthy
+      end
+    end
+
+    context "when submitting a good letter" do
+      it "is falsey" do
+        expect(game.failed_try?(secret[0])).to be_falsey
       end
     end
   end
 
   describe "#guess" do
     context "on bad input" do
-      it "does not decrement lives" do
-        expect{ game.guess('1') }.not_to change{ game.lives }
+      let(:play) { double(Play) }
+      let(:make_an_invalid_guess) { game.guess('1') }
+
+      it "invalidates the game (which means it can't be saved)" do
+        expect{ make_an_invalid_guess }.to change{ game.valid? }.from(true).to(false)
+      end
+
+      it "the current play is never retrieved (so no life is lost)" do
+        expect(game).not_to receive(:current_play)
+        make_an_invalid_guess
+      end
+
+      it "stays to the same turn" do
+        expect(game).not_to receive(:set_next_turn)
+        make_an_invalid_guess
       end
     end
 
-    context "duplicated guess" do
-      let(:guess) { 'e' }
+    context "on duplicated guess" do
+      let(:guess) { secret[0] }
 
-      it "does not decrement lives" do
+      before do
         game.guess(guess)
-        expect{ game.guess(guess) }.not_to change{ game.lives }
+      end
+
+      it "invalidates the game (which means it can't be saved)" do
+        expect{ game.guess(guess) }.to change{ game.valid? }.from(true).to(false)
+      end
+
+      it "the current play is never retrived (so no life is lost)" do
+        expect(game).not_to receive(:current_play)
+        game.guess(guess)
+      end
+
+      it "stays to the same turn" do
+        expect(game).not_to receive(:set_next_turn)
+        game.guess(guess)
       end
     end
 
-    context "on wrong letter" do
-      it "decrements lives" do
-        expect{ game.guess('x') }.to change{ game.lives }.by(-1)
-      end
-    end
+    # context "on wrong letter" do
+    #   it "decrements lives" do
+    #     expect{ game.guess('x') }.to change{ game.lives }.by(-1)
+    #   end
+    # end
   end
+
+  # TODO: moar tests! (I'd like to get into Cucumber, so no more RSpec
+  # tests right now)
 end

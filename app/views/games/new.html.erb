@@ -2,17 +2,17 @@
 
 Which players?
 
-    <%= form_for @game do |f| %>
+    <%= form_for :game, url: games_path do |f| %>
         <% Player.all.each do |player| %>
             <%= check_box_tag :player_ids,
             player.id,
-            @game.players.include?(player),
+            false, # No player selected by default
             :name => 'game[player_ids][]'
             %>
             <%= player.name %>
         <% end %>
 
-        <%= f.submit %>
+        <%= f.submit 'Create game' %>
     <% end %>
 </ul>
 <%= link_to 'Back to games', games_path %>

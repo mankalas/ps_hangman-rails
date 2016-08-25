@@ -1,8 +1,8 @@
 <h1>Game #<%= @game.id %></h1>
 
 <p>
-    <%= image_tag "hang#{7 - @game.current_player_lives}" %>
-    <%= pluralize(@game.current_player_lives, "life") %> remaining.
+    <%= image_tag "hang#{7 - @game.current_play.lives}" %>
+    <%= pluralize(@game.current_play.lives, "life") %> remaining.
 </p>
 
 <% if @game.lost? %>
@@ -12,9 +12,9 @@
 <% else %>
     <h2><%= format_masked_word(@game.secret_word_masked) %></h2>
 
-    <div style="background-color:<%= @game.current_player_color %>">
+    <div style="background-color:<%= @game.current_player.color %>">
     <%= form_tag(game_tries_path(@game), :method => 'post') do  %>
-        <%= label_tag "Your guess dear #{@game.current_player_name}:"%>
+        <%= label_tag "Your guess dear #{@game.current_player.name}:"%>
         <%= text_field_tag :guess %>
         <%= submit_tag "Guess" %>
     <% end %>
