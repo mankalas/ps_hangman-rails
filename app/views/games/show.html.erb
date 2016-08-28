@@ -1,30 +1,8 @@
 <h1>Game #<%= @game.id %></h1>
 
-<p><%= image_tag "hang#{7 - @game.lives}" %><%= pluralize(@game.lives, "life") %> remaining</p>
+<%= show_lives_image(@game) %>
+<%= show_lives_sentence(@game) %>
 
-<% if @game.lost? %>
-    <p>You've lost the game! The secret word was "<%= @game.secret %>".</p>
-<% elsif @game.won? %>
-    <p>You've won the game! Congrats!</p>
-<% else %>
-    <h2><%= format_masked_word(@game.secret_word_masked) %></h2>
+<%= render partial: 'status' %>
 
-    <%= form_tag(game_tries_path(@game), :method => 'post') do  %>
-        <%= label_tag 'Your guess'%>
-        <%= text_field_tag :guess %>
-        <%= submit_tag "Guess" %>
-    <% end %>
-
-    <% if flash[:notice] %>
-        <% flash[:notice].each do |notice| %>
-            <%= "#{notice}" %>
-        <% end %>
-    <% end %>
-<% end %>
-
-<% if @game.guesses_already_made? %>
-    <p>
-        You've already tried <%= format_tries(@game.tries) %>.
-    </p>
-<% end %>
 <%= link_to 'Back to games', games_path %>

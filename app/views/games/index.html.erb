@@ -1,6 +1,6 @@
 <h1>List of games</h1>
 
-<table border="1">
+<table>
     <tr>
         <th>Game #</th>
         <th>Status</th>
@@ -10,7 +10,7 @@
     <% @games.each do |game| %>
         <tr>
             <td><%= game.id %></td>
-            <td><%= game.won? ? 'Won' : (game.lost?) ? 'Lost' : 'In progress' %></td>
+            <td><%= show_status(game) %></td>
             <td><%= pluralize(game.lives, 'life') %></td>
             <td><%= game.secret %></td>
             <td><%= link_to 'Join', game_path(game) %></td>
@@ -18,4 +18,6 @@
     <% end %>
 </table>
 
-<%= link_to 'Create a new game', new_game_path %>
+<%= render partial: 'error' %>
+
+<%= link_to 'Create a new game', games_path, method: :post %>

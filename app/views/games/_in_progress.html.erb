@@ -1,0 +1,15 @@
+<h2><%= format_masked_word(@game.secret_word_masked) %></h2>
+
+<%= form_tag(game_tries_path(@game), :method => 'post') do  %>
+    <%= label_tag 'Your guess'%>
+    <%= text_field_tag :guess %>
+    <%= submit_tag "Guess" %>
+<% end %>
+
+<%= render partial: 'error' %>
+
+<% if @game.guesses_already_made? %>
+    <p>
+        You've already tried <%= format_tries(@game) %>.
+    </p>
+<% end %>
