@@ -1,10 +1,11 @@
 class Game < ApplicationRecord
   include WordPicker
 
-  # Validations
+  # Associations
   has_many :plays
   has_many :players, through: :plays
 
+  # Validations
   validates :secret,
             presence: true,
             format: { with: /\A[a-zA-Z]+\z/ }
@@ -46,7 +47,7 @@ class Game < ApplicationRecord
   end
 
   def failed_try?(try)
-    # Bad input is not a fail try, it's a invalid try.
+    # Bad input is not a failed try: it's a invalid try.
     valid? and not secret.include?(try)
   end
 
