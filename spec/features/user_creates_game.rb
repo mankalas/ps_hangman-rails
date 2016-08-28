@@ -1,5 +1,5 @@
 feature "User creates a game" do
-  scenario 'They see and click the new game link' do
+  scenario 'They click the new game link and a new game is created' do
     visit games_path
     click_link 'Setup a new game'
     expect{ click_button 'Create game' }.to change{ Game.count }.by(1)
@@ -24,46 +24,47 @@ end
 feature "3. User submits one letter" do
   fixtures :games
   let(:game) { games(:game) }
-  let(:good_letter) { 'e' }
+  let(:correct_letter) { 'e' }
 
   before do
     visit game_path(game)
   end
 
   scenario "The letter is in the word" do
-    submit_letter(good_letter)
+    submit_letter(correct_letter)
     expect(page).to have_content('e_e_____'.chars.join(' '))
   end
 
-  scenario "The letter is not in the word" do
-    bad_letter = 'x'
-    submit_letter(bad_letter)
+  scenario "The letter is not in the word, then..." do
+    wrong_letter = 'x'
+    submit_letter(wrong_letter)
+
     expect(page).to have_content(('_' * game.secret.length).chars.join(' '))
-    expect(page).to have_content("You've already tried #{bad_letter}")
+    expect(page).to have_content("You've already tried #{wrong_letter}")
   end
 
   scenario "The letter has already been guessed" do
-    2.times { submit_letter(good_letter) }
-    expect(page).to have_content("Already tried '#{good_letter}'")
+    2.times { submit_letter(correct_letter) }
+    expect(page).to have_content("Already tried '#{correct_letter}'")
   end
 end
 
-feature "4. Bad input gracefully handled" do
+feature "4. Wrong input gracefully handled" do
   fixtures :games
   let(:game) { games(:game) }
 
-  scenario "The user submit bad input" do
+  scenario "The user submit wrong input" do
     visit game_path(game)
     submit_letter('!')
     expect(page).to have_content('input must be a letter')
   end
 end
 
-feature "5. User sees good letters" do
+feature "5. User sees correct letters" do
   # Already tested in 3.
 end
 
-feature "6. User sees bad letters" do
+feature "6. User sees wrong letters" do
   # Already tested in 3.
 end
 
@@ -77,7 +78,7 @@ feature "7. User sees how many lives remaining" do
   end
 end
 
-feature "8. Life deduction upon bad guess" do
+feature "8. Life deduction upon wrong guess" do
   fixtures :games
   let(:game) { games(:game) }
 
@@ -93,7 +94,7 @@ feature "9. Game ends with a win" do
   fixtures :games
   let(:game) { games(:game) }
 
-  scenario "The user guesses all the good letters" do
+  scenario "The user guesses all the correct letters" do
     visit game_path(game)
     game.secret.chars.each { |char| submit_letter(char) }
     expect(page).to have_content("Congrats!")

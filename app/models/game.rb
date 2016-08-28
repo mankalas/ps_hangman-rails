@@ -1,46 +1,44 @@
-class TryValidator < ActiveModel::Validator
-  def validate(record)
-    tries = record.tries ? record.tries : ""
-    duplicates = tries.each_char.detect { |char| tries.count(char) > 1 }
-    record.errors[:tries] << "Already tried '#{duplicates}'" if duplicates
-  end
-end
-
-module WordPicker
-  UNIX_WORDS_PATH = '/usr/share/dict/words'
-  def pick_word
-    File.read(UNIX_WORDS_PATH).split.sample
-  end
-end
-
 class Game < ApplicationRecord
   include WordPicker
 
+  # Validations
   has_many :plays
   has_many :players, through: :plays
 
   validates :secret,
             presence: true,
             format: { with: /\A[a-zA-Z]+\z/ }
+
   validates :lives,
             presence: true,
             numericality: { only_integer: true,
                             greater_than_or_equal_to: 0 }
+
   validates :tries,
             format: { with: /\A[a-zA-Z]*\z/, message: "input must be a letter" }
-  validates_with TryValidator, fields: [:tries]
+  validate :check_duplicates
 
-  def initialize(arguments={})
-    super
+  def check_duplicates
+    if tries != nil
+      duplicates = tries.each_char.detect { |char| tries.count(char) > 1 }
+      errors[:tries] << "Already tried '#{duplicates}'" if duplicates
+    end
+  end
+
+  # Callbacks
+  before_validation :init_secret, on: :create
+
+  def init_secret
     self.secret ||= pick_word
   end
 
+  #
   def lost?
     lives <= 0
   end
 
   def won?
-    secret.each_char.all? { |char| tries.include?(char) }
+    (secret.chars - tries.chars).empty?
   end
 
   def secret_word_masked
@@ -69,11 +67,6 @@ class Game < ApplicationRecord
       current_play.lose_a_life!
       set_next_turn
     end
-  end
-
-  def guess!(try)
-    guess(try)
-    save!
   end
 
   def guesses_already_made?

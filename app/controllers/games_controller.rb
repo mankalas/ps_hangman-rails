@@ -9,9 +9,11 @@ class GamesController < ApplicationController
 
   def create
     @game = Game.new
+    
     params[:game][:player_ids].each do |player_id|
       @game.add_player(player_id)
     end
+    
     if @game.save
       @game.set_first_player!
       redirect_to @game
