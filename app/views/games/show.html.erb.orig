@@ -1,0 +1,38 @@
+<h1>Game #<%= @game.id %></h1>
+
+<<<<<<< HEAD
+<p>
+    <%= image_tag "hang#{7 - @game.current_play.lives}" %>
+    <%= pluralize(@game.current_play.lives, "life") %> remaining.
+</p>
+=======
+<%= show_lives_image(@game) %>
+<%= show_lives_sentence(@game) %>
+>>>>>>> master
+
+<%= render partial: 'status' %>
+
+<<<<<<< HEAD
+    <div style="background-color:<%= @game.current_player.color %>">
+    <%= form_tag(game_tries_path(@game), :method => 'post') do  %>
+        <%= label_tag "Your guess dear #{@game.current_player.name}:"%>
+        <%= text_field_tag :guess %>
+        <%= submit_tag "Guess" %>
+    <% end %>
+    </div>
+
+    <% if flash[:notice] %>
+        <% flash[:notice].each do |notice| %>
+            <%= "#{notice}" %>
+        <% end %>
+    <% end %>
+<% end %>
+
+<% if @game.guesses_already_made? %>
+    <p>
+        You've already tried <%= format_tries(@game.tries) %>.
+    </p>
+<% end %>
+=======
+>>>>>>> master
+<%= link_to 'Back to games', games_path %>

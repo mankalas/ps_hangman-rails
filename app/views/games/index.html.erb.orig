@@ -1,0 +1,30 @@
+<h1>List of games</h1>
+
+<table>
+    <tr>
+        <th>Game #</th>
+        <th>Status</th>
+        <th>Lives</th>
+        <th>Secret word</th>
+        <th>Players</th>
+    </tr>
+    <% @games.each do |game| %>
+        <tr>
+            <td><%= game.id %></td>
+            <td><%= show_status(game) %></td>
+            <td><%= pluralize(game.lives, 'life') %></td>
+            <td><%= game.secret %></td>
+            <td><%= game.players.map{|p| p.name } %>
+            <td><%= link_to 'Join', game_path(game) %></td>
+        </tr>
+    <% end %>
+</table>
+
+<<<<<<< HEAD
+<%= link_to 'Setup a new game', new_game_path %><br>
+<%= link_to 'Back to Welcome', welcome_index_path %>
+=======
+<%= render partial: 'error' %>
+
+<%= link_to 'Create a new game', games_path, method: :post %>
+>>>>>>> master
