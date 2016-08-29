@@ -1,6 +1,4 @@
 class Game < ApplicationRecord
-  include WordPicker
-
   # Validations
   validates :secret,
             presence: true,
@@ -53,5 +51,9 @@ class Game < ApplicationRecord
 
   def guesses_already_made?
     tries.length > 0
+  end
+
+  def pick_word
+    File.read('/usr/share/dict/words').split.sample
   end
 end

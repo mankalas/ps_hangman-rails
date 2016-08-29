@@ -1,10 +1,3 @@
-feature "1. User creates a game" do
-  scenario 'They click the new game link and a new game is created' do
-    visit games_path
-    expect{ click_link 'Create a new game' }.to change{ Game.count }.by(1)
-  end
-end
-
 feature "2. User sees how many letters there are in the word" do
   fixtures :games
   let(:game) { games(:game) }

@@ -1,7 +1,9 @@
 <p>
     <% if flash[:notice] %>
-        <% flash[:notice].each do |notice| %>
-            <%= "#{notice}" %>
-        <% end %>
+        <div class="flashnotice">
+            <% flash[:notice].each do |notice| %>
+                <%= "#{notice}" %>
+            <% end %>
+        </div>
     <% end %>
 </p>

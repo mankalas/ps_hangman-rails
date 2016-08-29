@@ -5,7 +5,7 @@ class TriesController < ApplicationController
 
     game.guess(try)
 
-    if game.update
+    if game.save
       redirect_to game
     else
       redirect_to game, notice: game.errors[:tries]
