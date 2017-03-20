@@ -1,6 +1,4 @@
 class Game < ApplicationRecord
-  include WordPicker
-
   # Associations
   has_many :plays
   has_many :players, through: :plays
@@ -30,7 +28,7 @@ class Game < ApplicationRecord
   before_validation :init_secret, on: :create
 
   def init_secret
-    self.secret ||= pick_word
+    self.secret ||= 'horseshit'
   end
 
   #
